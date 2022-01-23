@@ -1,0 +1,49 @@
+{% extends "base_generic.html" %}
+
+{% load static %}
+
+{% block content %}
+
+    {% for writing in writings %}
+    <div class="writing">
+    <h3>{{ writing.title }}</h3>
+    <p>{{ writing.text }}</p>
+    </div>
+
+    {% comment %} Comments Section {% endcomment %}
+    <button type="button" class="collapsible">View Comments</button>
+    <div class="comment-container">
+        <div class="comments" style="padding: 10px;">
+            {% for comment in writing.comments.all %}
+                <p class="font-weight-bold">
+                    {{ comment.name }}
+                    <span class=" text-muted font-weight-normal">
+                    {{ comment.created_on }}
+                    </span>
+                </p>
+                {{ comment.body | linebreaks }}
+            {% endfor %}
+        </div> 
+
+        <div class="card-body">
+            <h3>Leave a comment</h3>
+            <form method="post" style="margin-top: 1.3em;">
+                {% csrf_token %}
+                {% for field in comment_form %}
+                    {% if field.name == 'post' %}
+                        <input type="hidden" name="{{ field.name }}" value="{{ writing.id }}">
+                    {% elif field.name == 'name' %}
+                        <input name="{{ field.name }}">
+                    {% elif field.name == 'body' %}
+                        <textarea style="height: 163px; width: 334px;" name="{{ field.name }}"></textarea>
+                    {% endif %}
+                {% endfor %}
+                {{ comment_form.errors }}
+                {{ comment_form.non_field_errors }}
+                <button type="submit">Submit</button>
+            </form>
+        </div>
+    </div>
+    {% endfor %}
+
+{% endblock %}

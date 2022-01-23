@@ -1,0 +1,67 @@
+{% extends "base_generic.html" %}
+
+{% load static %}
+
+{% block content %}
+
+    <div class="photo-page-container">
+    {% for photo in photos %}
+        <div class="item">
+            <h3>{{ photo.title }}</h3>
+            <p>{{ photo.description }}</p>
+            <img id="img-{{forloop.counter}}" class="photo-page-img" alt="test" onclick="processModal(this);" src="{{ photo.image.url }}">
+        </div>
+        
+        {% comment %} Comments Section {% endcomment %}
+        <button type="button" class="collapsible">View Comments</button>
+        <div class="comment-container">
+            <div class="comments" style="padding: 10px;">
+                {% for comment in photo.comments.all %}
+                    <p class="font-weight-bold">
+                        {{ comment.name }}
+                        <span class=" text-muted font-weight-normal">
+                        {{ comment.created_on }}
+                        </span>
+                    </p>
+                    {{ comment.body | linebreaks }}
+                {% endfor %}
+            </div> 
+
+            <div class="card-body">
+                <h3>Leave a comment</h3>
+                <form method="post" style="margin-top: 1.3em;">
+                    {% csrf_token %}
+                    {% for field in comment_form %}
+                        {% if field.name == 'post' %}
+                            <input type="hidden" name="{{ field.name }}" value="{{ photo.id }}">
+                        {% elif field.name == 'name' %}
+                            <input name="{{ field.name }}">
+                        {% elif field.name == 'body' %}
+                            <textarea style="height: 163px; width: 334px;" name="{{ field.name }}"></textarea>
+                        {% endif %}
+                    {% endfor %}
+                    {{ comment_form.errors }}
+                    {{ comment_form.non_field_errors }}
+                    <button type="submit">Submit</button>
+                </form>
+            </div>
+        </div>
+
+
+    {% endfor %}
+
+    </div>
+
+    <div id="modal" class="modal">
+
+        <!-- The Close Button -->
+        <span class="close">&times;</span>
+      
+        <!-- Modal Content (The Image) -->
+        <img class="modal-content" id="img-m">
+      
+        <!-- Modal Caption (Image Text) -->
+        <div id="caption"></div>
+    </div>
+
+{% endblock %}

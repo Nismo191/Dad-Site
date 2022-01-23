@@ -1,0 +1,30 @@
+{% extends "base_generic.html" %}
+
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/styles.css' %}">
+
+{% block content %}
+
+  <a href="{% url 'photo' %}">
+    <div class="container-left">
+      <img class="image" src="{{ rand_img.image.url }}">
+      <div class="overlay-left">
+        <div class="text text-left">Photography</div>
+      </div>
+    </div>
+  </a>
+
+  <a href="{% url 'writing' %}">
+    <div class="container-right">
+      <img class="image" src="{% static 'images/writing.jpg' %}">
+      <div class="overlay-right">
+        <div class="text text-right">Writing</div>
+      </div>
+    </div>
+  </a>
+  
+
+{% endblock %}
+
+
+
