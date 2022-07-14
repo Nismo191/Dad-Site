@@ -4,12 +4,16 @@
 
 {% block content %}
 
-    <div class="photo-page-container">
+    <script>
+        photo_data = {{ data|safe }};
+    </script>
+
+    <div class="photo-grid">
     {% for photo in photos %}
         <div class="item">
             <h3>{{ photo.title }}</h3>
             <p>{{ photo.description }}</p>
-            <img id="img-{{forloop.counter}}" class="photo-page-img" alt="test" onclick="processModal(this);" src="{{ photo.image.url }}">
+            <img id="{{ photo.pk }}" class="photo-page-img" alt="{{ photo.title }}" onclick="processModal(this);" src="{{ photo.thumbnail.url }}">
         </div>
         
         {% comment %} Comments Section {% endcomment %}
@@ -62,6 +66,7 @@
       
         <!-- Modal Caption (Image Text) -->
         <div id="caption"></div>
+        <button class="zoom-button" onclick="zoom()">Zoom</button>
     </div>
 
 {% endblock %}

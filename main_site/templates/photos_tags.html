@@ -1,0 +1,30 @@
+{% extends "base_generic.html" %}
+
+{% load static %}
+
+{% block content %}
+
+    <script>
+        photo_data = {{ data|safe }};
+    </script>
+
+    <div class="photo-grid">
+    {% for photo in photos %}
+        <div class="item">
+            <!-- <h3>{{ photo.title }}</h3>
+            <p>{{ photo.description }}</p> -->
+            <div class="tag-text-container">
+                <p class="tag-text">{{ photo.get_tag }}</p>
+            </div>
+            <a href="./{{ photo.get_tag_id }}">
+                <img id="{{ photo.pk }}" class="photo-page-img" alt="{{ photo.title }}" src="{{ photo.thumbnail.url }}">
+            </a>
+        </div>
+
+
+
+    {% endfor %}
+    </div>
+
+
+{% endblock %}

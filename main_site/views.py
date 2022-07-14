@@ -1,6 +1,7 @@
 import random
 
 from django.shortcuts import render
+from django.core import serializers
 
 from .models import Photo, Writing, Tag, Photo_Comment, Writing_Comment
 from .forms import PhotoCommentForm, WritingCommentForm
@@ -29,9 +30,26 @@ def index(request):
     return render(request, 'index.html', context=context)
 
 
+def photo_tags(request):
+    tags = Tag.objects.all()
 
-def photo(request):
-    photos = Photo.objects.filter(published=True)
+    photos = Photo.objects.none()
+
+    for tag in tags:
+        photos = photos | Photo.objects.filter(tag__tag=tag).order_by('?')[:1]
+
+    photos.order_by('id')
+
+    data = serializers.serialize('json', photos)
+    context = {
+        'photos': photos,
+        'data': data
+    }
+    return render(request, 'photos_tags.html', context=context)
+
+
+def photo(request, tag_id):
+    photos = Photo.objects.filter(published=True).filter(tag__id=tag_id)
 
     if request.method == 'POST':
         comment_form = PhotoCommentForm(data=request.POST)
@@ -43,12 +61,14 @@ def photo(request):
     else:
         comment_form = PhotoCommentForm()
 
+
+    data = serializers.serialize('json', photos)
     context = {
         'photos': photos,
-        'comment_form': comment_form
+        'comment_form': comment_form,
+        'data': data
     }
     return render(request, 'photography.html', context=context)
-
 
 
 def writing(request):

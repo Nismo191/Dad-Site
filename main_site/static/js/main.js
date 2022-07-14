@@ -2,12 +2,18 @@ function processModal(data){
     // Get the modal
     var modal = document.getElementById("modal");
 
+    for(var i = 0; i < photo_data.length; i++){
+      if(data.id == photo_data[i].pk){
+        var url = photo_data[i].fields.image
+      }
+    }
+
     // Get the image and insert it inside the modal - use its "alt" text as a caption
     var img = document.getElementById(data.id);
     var modalImg = document.getElementById("img-m");
     var captionText = document.getElementById("caption");
     modal.style.display = "block";
-    modalImg.src = img.src;
+    modalImg.src = "/media/"+url
     captionText.innerHTML = img.alt;
 
     // Get the <span> element that closes the modal
@@ -19,6 +25,11 @@ function processModal(data){
     }
 }
 
+
+function zoom() {
+  var element = document.getElementById("img-m");
+  element.classList.toggle("zoom");
+}
 
 
 window.onload = function(){
@@ -37,3 +48,5 @@ window.onload = function(){
             });
     }
 }
+
+
